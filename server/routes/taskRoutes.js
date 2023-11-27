@@ -51,12 +51,12 @@ router.get('/get', verifyToken, async (req, res) => {
   });
   
   // Delete a task (protected route)
-  router.delete('/delete/:taskId', verifyToken, async (req, res) => {
+  router.delete('/delete/:taskTitle', verifyToken, async (req, res) => {
     const userId = req.userId;
-    const taskId = req.params.taskId;
+    const taskTitle = req.params.taskTitle;
   
     try {
-      await db.query('DELETE FROM tasks WHERE id = $1 AND user_id = $2', [taskId, userId]);
+      await db.query('DELETE FROM tasks WHERE title = $1 AND user_id = $2', [taskTitle, userId]);
   
       res.json({ message: 'Task deleted successfully' });
     } catch (error) {

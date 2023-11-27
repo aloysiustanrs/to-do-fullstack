@@ -78,7 +78,7 @@ const Home = () => {
     }
   };
 
-  const handleDeleteTask = async (taskId) => {
+  const handleDeleteTask = async (taskTitle) => {
     try {
       const token = localStorage.getItem('token');
       const options = {
@@ -89,10 +89,10 @@ const Home = () => {
         },
       };
 
-      const response = await fetch(`http://localhost:3001/tasks/delete/${taskId}`, options);
+      const response = await fetch(`http://localhost:3001/tasks/delete/${taskTitle}`, options);
 
       if (response.ok) {
-        setTasks(tasks.filter((task) => task.id !== taskId));
+        setTasks(tasks.filter((task) => task.title !== taskTitle));
       } else {
         const data = await response.json();
         console.error('Failed to delete task:', data);
@@ -112,7 +112,7 @@ const Home = () => {
           <li key={task.id}>
             {task.title} - {task.description}{' '}
             <button onClick={() => handleEditTask({ ...task, title: 'Edited Task' })}>Edit</button>
-            <button onClick={() => handleDeleteTask(task.id)}>Delete</button>
+            <button onClick={() => handleDeleteTask(task.title)}>Delete</button>
           </li>
         ))}
       </ul>
