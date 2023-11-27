@@ -10,7 +10,12 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(bodyParser.json());
-app.use(cors());
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  // other CORS options if needed
+};
+
+app.use(cors(corsOptions));
 
 app.use('/auth', authRoutes);
 app.use('/tasks', verifyToken, taskRoutes);

@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import TaskForm from './TaskForm';
+import { FaEdit, FaTrash } from 'react-icons/fa';
+
 
 const Home = () => {
   const [tasks, setTasks] = useState([]);
@@ -87,13 +89,44 @@ const Home = () => {
 
   };
 
+  const handleMarkingTask = async (taskId, taskCompleted) => {
+
+    var oppositeMarking = !taskCompleted;
+
+   
+    try {
+      const token = localStorage.getItem('token');
+      const options = {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ completed: oppositeMarking }),
+      };
+
+      const response = await fetch(`http://localhost:3001/tasks/marking/${taskId}`, options);
+      const data = await response.json();
+
+      if (response.ok) {
+        setTasks((prevTasks) =>
+          prevTasks.map((task) => (task.title === data.title ? data : task))
+        );
+        setEditingTaskId(null); // Clear the editing task ID after successful edit
+      } else {
+        console.error('Failed to edit task:', data);
+      }
+    } catch (error) {
+      console.error('Error editing task:', error);
+    }
+
+    await fetchTasks();
+
+  };
+
   const handleStartEditing = (taskId, taskTitle) => {
     setEditingTaskId(taskId);
     setEditedTaskTitle(taskTitle)
-  };
-
-  const handleCancelEditing = () => {
-    setEditingTaskId(null);
   };
 
   const handleDeleteTask = async (taskId) => {
@@ -136,13 +169,17 @@ const Home = () => {
                 onChange={(e) => setEditedTaskTitle(e.target.value)}
               />
               <button onClick={() => handleEditTask(task.id, editedTaskTitle)}>Save</button>
-              <button onClick={handleCancelEditing}>Cancel</button>
             </>
           ) : (
-            <span>{task.title}</span>
+            <span style={{ textDecoration: task.completed ? 'line-through' : 'none' }} onClick={() => handleMarkingTask(task.id, task.completed) }>
+              {task.title}
+            </span>
           )}
-          {editingTaskId?<></>:<button onClick={() => handleStartEditing(task.id, task.title)}>Edit</button>}          
-          <button onClick={() => handleDeleteTask(task.id)}>Delete</button>
+          {editingTaskId?<></>:
+          <span onClick={() => handleStartEditing(task.id, task.title)}>
+            <FaEdit />
+          </span>}          
+          <span onClick={() => handleDeleteTask(task.id)}><FaTrash /></span>
         </li>
         ))}
       </ul>

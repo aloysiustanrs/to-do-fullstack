@@ -49,6 +49,23 @@ router.get('/get', verifyToken, async (req, res) => {
       res.status(500).json({ message: 'Internal server error' });
     }
   });
+
+  //Mark task as complete or incomplete
+  router.put('/marking/:taskId', verifyToken, async (req, res) => {
+    const userId = req.userId;
+    const taskId = req.params.taskId;
+    const { completed } = req.body;
+  
+    try {
+      await db.query('UPDATE tasks SET completed = $1 WHERE id = $2 AND user_id = $3', [completed, taskId, userId]);
+  
+      res.json({ message: 'Task updated successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
   
   // Delete a task (protected route)
   router.delete('/delete/:taskId', verifyToken, async (req, res) => {
