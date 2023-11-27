@@ -5,6 +5,8 @@ import TaskForm from './TaskForm';
 
 const Home = () => {
   const [tasks, setTasks] = useState([]);
+  const [editingTaskId, setEditingTaskId] = useState(null);
+  const [editedTaskTitle, setEditedTaskTitle] = useState('');
 
   useEffect(() => {
     fetchTasks();
@@ -53,7 +55,8 @@ const Home = () => {
     }
   };
 
-  const handleEditTask = async (editedTask) => {
+  const handleEditTask = async (taskId, editedTask) => {
+   
     try {
       const token = localStorage.getItem('token');
       const options = {
@@ -65,11 +68,14 @@ const Home = () => {
         body: JSON.stringify(editedTask),
       };
 
-      const response = await fetch(`http://localhost:3001/tasks/update/${editedTask.id}`, options);
+      const response = await fetch(`http://localhost:3001/tasks/update/${taskId}`, options);
       const data = await response.json();
 
       if (response.ok) {
-        setTasks(tasks.map((task) => (task.id === data.id ? data : task)));
+        setTasks((prevTasks) =>
+          prevTasks.map((task) => (task.title === data.title ? data : task))
+        );
+        setEditingTaskId(null); // Clear the editing task ID after successful edit
       } else {
         console.error('Failed to edit task:', data);
       }
@@ -78,7 +84,16 @@ const Home = () => {
     }
   };
 
-  const handleDeleteTask = async (taskTitle) => {
+  const handleStartEditing = (taskId, task) => {
+    setEditingTaskId(taskId);
+    setEditedTaskTitle()
+  };
+
+  const handleCancelEditing = () => {
+    setEditingTaskId(null);
+  };
+
+  const handleDeleteTask = async (taskId) => {
     try {
       const token = localStorage.getItem('token');
       const options = {
@@ -89,10 +104,10 @@ const Home = () => {
         },
       };
 
-      const response = await fetch(`http://localhost:3001/tasks/delete/${taskTitle}`, options);
+      const response = await fetch(`http://localhost:3001/tasks/delete/${taskId}`, options);
 
       if (response.ok) {
-        setTasks(tasks.filter((task) => task.title !== taskTitle));
+        setTasks(tasks.filter((task) => task.id !== taskId));
       } else {
         const data = await response.json();
         console.error('Failed to delete task:', data);
@@ -110,10 +125,22 @@ const Home = () => {
       <ul>
         {tasks.map((task) => (
           <li key={task.id}>
-            {task.title} - {task.description}{' '}
-            <button onClick={() => handleEditTask({ ...task, title: 'Edited Task' })}>Edit</button>
-            <button onClick={() => handleDeleteTask(task.title)}>Delete</button>
-          </li>
+          {editingTaskId === task.id ? (
+            <>
+              <input
+                type="text"
+                value={task.title}
+                onChange={(e) => setEditedTaskTitle(e.target.value)}
+              />
+              <button onClick={() => handleEditTask(task.id, editedTaskTitle)}>Save</button>
+              <button onClick={handleCancelEditing}>Cancel</button>
+            </>
+          ) : (
+            <span>{task.title}</span>
+          )}
+          {editingTaskId?<></>:<button onClick={() => handleStartEditing(task.id)}>Edit</button>}          
+          <button onClick={() => handleDeleteTask(task.id)}>Delete</button>
+        </li>
         ))}
       </ul>
     </div>
