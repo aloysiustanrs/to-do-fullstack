@@ -35,7 +35,7 @@ router.get('/get', verifyToken, async (req, res) => {
   });
   
   // Update a task (protected route)
-  router.put('/:taskId', verifyToken, async (req, res) => {
+  router.put('/update/:taskId', verifyToken, async (req, res) => {
     const userId = req.userId;
     const taskId = req.params.taskId;
     const { title, completed } = req.body;
@@ -51,7 +51,7 @@ router.get('/get', verifyToken, async (req, res) => {
   });
   
   // Delete a task (protected route)
-  router.delete('/:taskId', verifyToken, async (req, res) => {
+  router.delete('/delete/:taskId', verifyToken, async (req, res) => {
     const userId = req.userId;
     const taskId = req.params.taskId;
   

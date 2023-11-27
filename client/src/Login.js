@@ -20,12 +20,12 @@ const Login = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
 
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', username);
 
-        navigate('/');
+        // Use navigate only if the component is rendered
+        navigate('/home');
         console.log('Login successful');
       } else {
         console.error(`Login failed with status ${response.status}: ${response.statusText}`);
@@ -41,28 +41,28 @@ const Login = () => {
     }
   };
 
+  // Retrieve token from localStorage
   const jwtToken = localStorage.getItem('token');
-  const hasToken = Boolean(jwtToken);
 
+  // If token exists, navigate to home page
+  if (jwtToken) {
+    navigate('/home');
+  }
+
+  // If token doesn't exist, render login form
   return (
     <div>
-      {hasToken ? (
-        navigate('/home')
-      ) : (
-        <div>
-          <label>
-            Username:
-            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-          </label>
-          <br />
-          <label>
-            Password:
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-          </label>
-          <br />
-          <button onClick={handleLogin}>Login</button>
-        </div>
-      )}
+      <label>
+        Username:
+        <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+      </label>
+      <br />
+      <label>
+        Password:
+        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+      </label>
+      <br />
+      <button onClick={handleLogin}>Login</button>
     </div>
   );
 };
