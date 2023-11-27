@@ -22,10 +22,10 @@ router.get('/get', verifyToken, async (req, res) => {
   router.post('/create', verifyToken, async (req, res) => {
     const userId = req.userId;
     
-    const { title } = req.body;
+    const { id, title } = req.body;
   
     try {
-      await db.query('INSERT INTO tasks (user_id, title) VALUES ($1, $2)', [userId, title]);
+      await db.query('INSERT INTO tasks (id, user_id, title) VALUES ($1, $2, $3)', [id, userId, title]);
   
       res.status(201).json({ message: 'Task created successfully'});
     } catch (error) {
