@@ -65,7 +65,7 @@ const Home = () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(editedTask),
+        body: JSON.stringify({ editedTask }),
       };
 
       const response = await fetch(`http://localhost:3001/tasks/update/${taskId}`, options);
@@ -82,11 +82,14 @@ const Home = () => {
     } catch (error) {
       console.error('Error editing task:', error);
     }
+
+    await fetchTasks();
+
   };
 
-  const handleStartEditing = (taskId, task) => {
+  const handleStartEditing = (taskId, taskTitle) => {
     setEditingTaskId(taskId);
-    setEditedTaskTitle()
+    setEditedTaskTitle(taskTitle)
   };
 
   const handleCancelEditing = () => {
@@ -129,7 +132,7 @@ const Home = () => {
             <>
               <input
                 type="text"
-                value={task.title}
+                value={editedTaskTitle}
                 onChange={(e) => setEditedTaskTitle(e.target.value)}
               />
               <button onClick={() => handleEditTask(task.id, editedTaskTitle)}>Save</button>
@@ -138,7 +141,7 @@ const Home = () => {
           ) : (
             <span>{task.title}</span>
           )}
-          {editingTaskId?<></>:<button onClick={() => handleStartEditing(task.id)}>Edit</button>}          
+          {editingTaskId?<></>:<button onClick={() => handleStartEditing(task.id, task.title)}>Edit</button>}          
           <button onClick={() => handleDeleteTask(task.id)}>Delete</button>
         </li>
         ))}

@@ -38,10 +38,10 @@ router.get('/get', verifyToken, async (req, res) => {
   router.put('/update/:taskId', verifyToken, async (req, res) => {
     const userId = req.userId;
     const taskId = req.params.taskId;
-    const { title, completed } = req.body;
+    const { editedTask } = req.body;
   
     try {
-      await db.query('UPDATE tasks SET title = $1, completed = $2 WHERE id = $3 AND user_id = $4', [title, completed, taskId, userId]);
+      await db.query('UPDATE tasks SET title = $1 WHERE id = $2 AND user_id = $3', [editedTask, taskId, userId]);
   
       res.json({ message: 'Task updated successfully' });
     } catch (error) {
