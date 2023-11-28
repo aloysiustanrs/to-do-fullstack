@@ -1,16 +1,16 @@
-// Login.js
+// Register.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
+const Register = () => {
   const navigate = useNavigate();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = async () => {
+  const handleRegister = async () => {
     try {
-      const response = await fetch('http://localhost:3001/auth/login', {
+      const response = await fetch('http://localhost:3001/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -26,30 +26,21 @@ const Login = () => {
 
         // Use navigate only if the component is rendered
         navigate('/home');
-        console.log('Login successful');
+        console.log('Registration successful');
       } else {
-        console.error(`Login failed with status ${response.status}: ${response.statusText}`);
+        console.error(`Registration failed with status ${response.status}: ${response.statusText}`);
 
-        if (response.status === 401) {
-          console.log('Unauthorized - Invalid credentials');
+        if (response.status === 409) {
+          console.log('Conflict - Username already exists');
         } else {
           console.log('Other error occurred');
         }
       }
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error('Registration failed:', error);
     }
   };
 
-  // Retrieve token from localStorage
-  const jwtToken = localStorage.getItem('token');
-
-  // If token exists, navigate to home page
-  if (jwtToken) {
-    navigate('/home');
-  }
-
-  // If token doesn't exist, render login form
   return (
     <div>
       <label>
@@ -62,11 +53,9 @@ const Login = () => {
         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
       </label>
       <br />
-      <button onClick={handleLogin}>Login</button>
-
-      <button onClick={() => navigate('/register')}>Register</button>
+      <button onClick={handleRegister}>Register</button>
     </div>
   );
 };
 
-export default Login;
+export default Register;
