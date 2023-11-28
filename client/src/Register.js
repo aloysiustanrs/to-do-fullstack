@@ -42,18 +42,34 @@ const Register = () => {
   };
 
   return (
-    <div>
-      <label>
-        Username:
-        <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-      </label>
-      <br />
-      <label>
-        Password:
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-      </label>
-      <br />
-      <button onClick={handleRegister}>Register</button>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="bg-white p-8 rounded shadow-md max-w-md w-full">
+        <h2 className="text-2xl font-semibold mb-4 text-center">Register</h2>
+        <label className="block mb-4">
+          Username:
+          <input
+            className="border border-gray-300 px-3 py-2 w-full"
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+        </label>
+        <label className="block mb-4">
+          Password:
+          <input
+            className="border border-gray-300 px-3 py-2 w-full"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </label>
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full"
+          onClick={handleRegister}
+        >
+          Register
+        </button>
+      </div>
     </div>
   );
 };

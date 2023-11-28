@@ -154,13 +154,18 @@ const Home = () => {
   };
 
   return (
-    <div>
-      <h1>{currentUser}'s Task List</h1>
-      <Link to="/logout">Logout</Link>
+    <div className="min-h-screen bg-gray-100">
+      <h1 className="text-3xl font-bold mb-4 text-center pt-8">{currentUser}'s Task List</h1>
+      <Link to="/logout" className="text-blue-500 hover:underline block text-center mb-4">
+        Logout
+      </Link>
       <TaskForm onSubmit={handleAddTask} />
-      <ul>
+      <ul className="max-w-md mx-auto mt-4">
         {tasks.map((task) => (
-          <li key={task.id}>
+          <li
+            key={task.id}
+            className="bg-white border p-4 mb-4 flex justify-between items-center rounded shadow-md"
+          >
           {editingTaskId === task.id ? (
             <>
               <input
