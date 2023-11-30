@@ -8,7 +8,7 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 3001
+EXPOSE 3000
 # required for docker desktop port mapping
 
-CMD ["npm", "run" , "dev"]
+CMD ["npm", "start"]
