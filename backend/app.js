@@ -6,8 +6,9 @@ const authRoutes = require('./routes/authRoutes');
 const taskRoutes = require('./routes/taskRoutes');
 require('dotenv').config();
 
+const { PORT } = require('./config');
+
 const app = express();
-const PORT = process.env.PORT || 3001;
 
 app.use(bodyParser.json());
 const corsOptions = {
