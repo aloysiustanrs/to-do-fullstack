@@ -4,25 +4,33 @@ const cors = require("cors");
 const verifyToken = require("./middleware/verifyToken");
 const authRoutes = require("./routes/authRoutes");
 const taskRoutes = require("./routes/taskRoutes");
-require("dotenv").config();
-
+const { sequelize } = require("./db/database");
 const { PORT } = require("./config");
 
-const backendPort = PORT || 3001;
+async function main() {
+  const backendPort = PORT || 3001;
 
-const app = express();
+  try {
+    // Sequelize
+    // set force to true to overwrite any existing tables - all data will be lost!
+    await sequelize.sync({ force: false });
 
-app.use(bodyParser.json());
-const corsOptions = {
-  origin: "http://localhost:3000",
-  // other CORS options if needed
-};
+    // Express app
+    const app = express();
+    app.use(bodyParser.json());
+    const corsOptions = {
+      origin: "http://localhost:3000",
+    };
+    app.use(cors(corsOptions));
+    app.use("/auth", authRoutes);
+    app.use("/tasks", verifyToken, taskRoutes);
 
-app.use(cors(corsOptions));
+    app.listen(backendPort, () => {
+      console.log(`Server is running on http://localhost:${backendPort}`);
+    });
+  } catch (error) {
+    console.error("Unable to connect to the database:", error);
+  }
+}
 
-app.use("/auth", authRoutes);
-app.use("/tasks", verifyToken, taskRoutes);
-
-app.listen(backendPort, () => {
-  console.log(`Server is running on http://localhost:${backendPort}`);
-});
+main();
