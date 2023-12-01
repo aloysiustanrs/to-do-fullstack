@@ -1,8 +1,8 @@
-const path = require('path');
-const dotenv = require('dotenv');
+const path = require("path");
+const dotenv = require("dotenv");
 
 // Specify the path to your .env file
-const envFilePath = path.resolve(__dirname, '../.env');
+const envFilePath = path.resolve(__dirname, "../.env");
 
 // Load the .env file
 dotenv.config({ path: envFilePath });
@@ -18,5 +18,5 @@ module.exports = {
   dbUser,
   dbPassword,
   jwtExpiresIn,
-  PORT
+  PORT,
 };
