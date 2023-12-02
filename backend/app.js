@@ -4,10 +4,11 @@ const cors = require("cors");
 const verifyToken = require("./middleware/verifyToken");
 const authRoutes = require("./routes/authRoutes");
 const taskRoutes = require("./routes/taskRoutes");
-const { sequelize } = require("./db/database");
 const { PORT } = require("./config");
 const { User } = require("./models/User");
 const { Task } = require("./models/Task");
+const { sequelize } = require("./db/database.js");
+const seeders = require("./seeders/20231202141933-UserSeeder.js");
 
 Task.belongsTo(User, {
   foreignKey: "userId",
@@ -22,11 +23,13 @@ async function main() {
   const backendPort = PORT || 3001;
 
   try {
-    // Sequelize
     // set force to true to overwrite any existing tables - all data will be lost!
-    // Sequelize sync for User model
+    // Sequelize sync for User and Task model
     await User.sync({ force: false });
     await Task.sync({ force: false });
+
+    // Seeders to create data in tables initially
+    await seeders.up(sequelize.getQueryInterface(), sequelize.constructor);
 
     // Express app
     const app = express();
