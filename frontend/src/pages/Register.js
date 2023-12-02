@@ -1,19 +1,19 @@
 // Register.js
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const navigate = useNavigate();
 
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleRegister = async () => {
     try {
-      const response = await fetch('http://localhost:3001/auth/register', {
-        method: 'POST',
+      const response = await fetch("http://localhost:3001/auth/register", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ username, password }),
       });
@@ -21,23 +21,25 @@ const Register = () => {
       if (response.ok) {
         const data = await response.json();
 
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', username);
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", username);
 
         // Use navigate only if the component is rendered
-        navigate('/home');
-        console.log('Registration successful');
+        navigate("/home");
+        console.log("Registration successful");
       } else {
-        console.error(`Registration failed with status ${response.status}: ${response.statusText}`);
+        console.error(
+          `Registration failed with status ${response.status}: ${response.statusText}`
+        );
 
         if (response.status === 409) {
-          console.log('Conflict - Username already exists');
+          console.log("Conflict - Username already exists");
         } else {
-          console.log('Other error occurred');
+          console.log("Other error occurred");
         }
       }
     } catch (error) {
-      console.error('Registration failed:', error);
+      console.error("Registration failed:", error);
     }
   };
 

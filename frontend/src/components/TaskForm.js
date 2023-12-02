@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const TaskForm = ({ onSubmit }) => {
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -11,15 +11,8 @@ const TaskForm = ({ onSubmit }) => {
       return;
     }
 
-    const taskId = new Date().getTime();
-
-    const newTask = {
-      id: taskId,
-      title,
-    };
-
-    onSubmit(newTask);
-    setTitle('');
+    onSubmit(title);
+    setTitle("");
   };
 
   return (

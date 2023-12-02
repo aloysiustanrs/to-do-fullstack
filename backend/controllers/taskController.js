@@ -14,11 +14,13 @@ async function getUserTasks(req, res) {
 
 async function createTask(req, res) {
   const userId = req.userId;
-  const { title } = req.body;
+  const { newTaskTitle } = req.body;
 
   try {
-    await Task.create({ userId, title });
-    res.status(201).json({ message: "Task created successfully" });
+    const createdTask = await Task.create({ userId, title: newTaskTitle });
+    res
+      .status(201)
+      .json({ message: "Task created successfully", taskId: createdTask.id });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
@@ -28,10 +30,13 @@ async function createTask(req, res) {
 async function updateTask(req, res) {
   const userId = req.userId;
   const taskId = req.params.taskId;
-  const { editedTask } = req.body;
+  const { editedTaskTitle } = req.body;
 
   try {
-    await Task.update({ title: editedTask }, { where: { id: taskId, userId } });
+    await Task.update(
+      { title: editedTaskTitle },
+      { where: { id: taskId, userId } }
+    );
     res.json({ message: "Task updated successfully" });
   } catch (error) {
     console.error(error);

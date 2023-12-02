@@ -1,20 +1,19 @@
-import './App.css';
-import Home from './Home';
-import Login from './Login';
-import Logout from './Logout';
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Logout from "./pages/Logout";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Register from './Register';
+import Register from "./pages/Register";
 
 function App() {
   return (
     <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<Login />}/>
-      <Route path="/home" element={<Home />}/>
-      <Route path="/logout" element={<Logout />}/>
-      <Route path="/register" element={<Register />}/>
-    </Routes>
-  </BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/logout" element={<Logout />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
