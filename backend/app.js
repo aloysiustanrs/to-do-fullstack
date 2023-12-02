@@ -29,7 +29,7 @@ async function main() {
     await Task.sync({ force: false });
 
     // Seeders to create data in tables initially
-    await seeders.up(sequelize.getQueryInterface(), sequelize.constructor);
+    await seeders.up(sequelize.getQueryInterface());
 
     // Express app
     const app = express();
