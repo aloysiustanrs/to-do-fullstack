@@ -9,19 +9,13 @@ const Home = () => {
   const [editingTaskId, setEditingTaskId] = useState(null);
   const [editedTaskTitle, setEditedTaskTitle] = useState("");
 
-  useEffect(() => {
-    fetchTasks();
-  }, []);
-
-  const currentUser = localStorage.getItem("user");
-
   const fetchTasks = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const jwt = localStorage.getItem("token"); // Move jwt declaration here
       const options = {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${jwt}`,
         },
       };
       const response = await fetch("http://localhost:3001/tasks/get", options);
@@ -32,14 +26,23 @@ const Home = () => {
     }
   };
 
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  // Move jwt declaration above its usage
+  const jwt = localStorage.getItem("token");
+  const [, payloadBase64] = jwt.split(".");
+  const payload = JSON.parse(atob(payloadBase64));
+  const username = payload.username;
+
   const handleAddTask = async (newTaskTitle) => {
     try {
-      const token = localStorage.getItem("token");
       const options = {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${jwt}`,
         },
         body: JSON.stringify({ newTaskTitle }),
       };
@@ -70,12 +73,11 @@ const Home = () => {
 
   const handleEditTask = async (taskId, editedTaskTitle) => {
     try {
-      const token = localStorage.getItem("token");
       const options = {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${jwt}`,
         },
         body: JSON.stringify({ editedTaskTitle }),
       };
@@ -105,12 +107,11 @@ const Home = () => {
     var oppositeMarking = !taskCompleted;
 
     try {
-      const token = localStorage.getItem("token");
       const options = {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${jwt}`,
         },
         body: JSON.stringify({ completed: oppositeMarking }),
       };
@@ -143,12 +144,11 @@ const Home = () => {
 
   const handleDeleteTask = async (taskId) => {
     try {
-      const token = localStorage.getItem("token");
       const options = {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${jwt}`,
         },
       };
 
@@ -171,7 +171,7 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       <h1 className="text-3xl font-bold mb-4 text-center pt-8">
-        {currentUser}'s Task List
+        {username}'s Task List
       </h1>
       <Link
         to="/logout"

@@ -1,19 +1,19 @@
 // Login.js
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
 
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('http://localhost:3001/auth/login', {
-        method: 'POST',
+      const response = await fetch("http://localhost:3001/auth/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ username, password }),
       });
@@ -21,32 +21,33 @@ const Login = () => {
       if (response.ok) {
         const data = await response.json();
 
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', username);
+        localStorage.setItem("token", data.token);
 
         // Use navigate only if the component is rendered
-        navigate('/home');
-        console.log('Login successful');
+        navigate("/home");
+        console.log("Login successful");
       } else {
-        console.error(`Login failed with status ${response.status}: ${response.statusText}`);
+        console.error(
+          `Login failed with status ${response.status}: ${response.statusText}`
+        );
 
         if (response.status === 401) {
-          console.log('Unauthorized - Invalid credentials');
+          console.log("Unauthorized - Invalid credentials");
         } else {
-          console.log('Other error occurred');
+          console.log("Other error occurred");
         }
       }
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error("Login failed:", error);
     }
   };
 
   // Retrieve token from localStorage
-  const jwtToken = localStorage.getItem('token');
+  const jwt = localStorage.getItem("token");
 
   // If token exists, navigate to home page
-  if (jwtToken) {
-    navigate('/home');
+  if (jwt) {
+    navigate("/home");
   }
 
   // If token doesn't exist, render login form
@@ -80,7 +81,7 @@ const Login = () => {
         </button>
         <button
           className="mt-2 bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 w-full"
-          onClick={() => navigate('/register')}
+          onClick={() => navigate("/register")}
         >
           Register
         </button>

@@ -22,7 +22,6 @@ const Register = () => {
         const data = await response.json();
 
         localStorage.setItem("token", data.token);
-        localStorage.setItem("user", username);
 
         // Use navigate only if the component is rendered
         navigate("/home");

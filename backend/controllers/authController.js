@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { User } = require("../models/User");
-const { JWT_EXPIRES_IN } = require("../config");
+const { JWT_EXPIRES_IN, JWT_SECRET } = require("../config");
 
 async function registerUser(req, res) {
   const { username, password } = req.body;
@@ -10,9 +10,13 @@ async function registerUser(req, res) {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({ username, password: hashedPassword });
 
-    const token = jwt.sign({ userId: user.id }, "your-secret-key", {
-      expiresIn: JWT_EXPIRES_IN,
-    });
+    const token = jwt.sign(
+      { userId: user.id, username: user.username },
+      JWT_SECRET,
+      {
+        expiresIn: JWT_EXPIRES_IN,
+      }
+    );
 
     res.json({ token });
   } catch (error) {
@@ -37,9 +41,13 @@ async function loginUser(req, res) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    const token = jwt.sign({ userId: user.id }, "your-secret-key", {
-      expiresIn: JWT_EXPIRES_IN,
-    });
+    const token = jwt.sign(
+      { userId: user.id, username: user.username },
+      JWT_SECRET,
+      {
+        expiresIn: JWT_EXPIRES_IN,
+      }
+    );
 
     res.json({ token });
   } catch (error) {
