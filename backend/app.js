@@ -6,6 +6,17 @@ const authRoutes = require("./routes/authRoutes");
 const taskRoutes = require("./routes/taskRoutes");
 const { sequelize } = require("./db/database");
 const { PORT } = require("./config");
+const { User } = require("./models/User");
+const { Task } = require("./models/Task");
+
+Task.belongsTo(User, {
+  foreignKey: "userId",
+  targetKey: "id",
+});
+User.hasMany(Task, {
+  foreignKey: "userId",
+  sourceKey: "id",
+});
 
 async function main() {
   const backendPort = PORT || 3001;
@@ -13,7 +24,9 @@ async function main() {
   try {
     // Sequelize
     // set force to true to overwrite any existing tables - all data will be lost!
-    await sequelize.sync({ force: false });
+    // Sequelize sync for User model
+    await User.sync({ force: false });
+    await Task.sync({ force: false });
 
     // Express app
     const app = express();

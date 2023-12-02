@@ -1,7 +1,6 @@
 // models/Task.js
 const { DataTypes } = require("sequelize");
-const sequelize = require("../db/database");
-const { User } = require("./User");
+const { sequelize } = require("../db/database");
 
 const Task = sequelize.define(
   "tasks",
@@ -23,10 +22,5 @@ const Task = sequelize.define(
     timestamps: true,
   }
 );
-
-// Define the foreign key relationship
-Task.belongsTo(User, {
-  foreignKey: "userId", // Name of the foreign key in the tasks table
-});
 
 module.exports = { Task };
