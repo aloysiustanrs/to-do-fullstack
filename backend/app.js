@@ -34,10 +34,7 @@ async function main() {
     // Express app
     const app = express();
     app.use(bodyParser.json());
-    const corsOptions = {
-      origin: "http://localhost:3000",
-    };
-    app.use(cors(corsOptions));
+    app.use(cors());
     app.use("/auth", authRoutes);
     app.use("/tasks", verifyToken, taskRoutes);
 
