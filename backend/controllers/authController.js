@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { User } = require("../models/User");
-const { JWT_EXPIRES_IN, JWT_SECRET } = require("../config");
+
 
 async function registerUser(req, res) {
   const { username, password } = req.body;
@@ -12,9 +12,9 @@ async function registerUser(req, res) {
 
     const token = jwt.sign(
       { userId: user.id, username: user.username },
-      JWT_SECRET,
+      process.env.JWT_SECRET,
       {
-        expiresIn: JWT_EXPIRES_IN,
+        expiresIn: process.env.JWT_EXPIRES_IN,
       }
     );
 
@@ -43,9 +43,9 @@ async function loginUser(req, res) {
 
     const token = jwt.sign(
       { userId: user.id, username: user.username },
-      JWT_SECRET,
+      process.env.JWT_SECRET,
       {
-        expiresIn: JWT_EXPIRES_IN,
+        expiresIn: process.env.JWT_EXPIRES_IN,
       }
     );
 
