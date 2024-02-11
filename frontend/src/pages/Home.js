@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import TaskForm from "../components/TaskForm";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import TaskAPI from "../api/TaskAPI";
-import axios from "axios"; // Import Axios
 
 const Home = () => {
   const [tasks, setTasks] = useState([]);

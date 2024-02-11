@@ -1,6 +1,6 @@
-// Register.js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import TaskAPI from "../api/TaskAPI"; 
 
 const Register = () => {
   const navigate = useNavigate();
@@ -10,16 +10,13 @@ const Register = () => {
 
   const handleRegister = async () => {
     try {
-      const response = await fetch("http://localhost:3001/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, password }),
+      const response = await TaskAPI.post("/auth/register", { // Use TaskAPI.post instead of axios.post
+        username,
+        password,
       });
 
-      if (response.ok) {
-        const data = await response.json();
+      if (response.status === 200) { // Check status code directly
+        const data = response.data;
 
         localStorage.setItem("token", data.token);
 

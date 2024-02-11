@@ -36,8 +36,8 @@ async function main() {
     const app = express();
     app.use(bodyParser.json());
     app.use(cors());
-    app.use("/auth", authRoutes);
-    app.use("/tasks", verifyToken, taskRoutes);
+    app.use("/api/auth", authRoutes);
+    app.use("/api/tasks", verifyToken, taskRoutes);
 
     app.listen(backendPort, () => {
       console.log(`Server is running on http://localhost:${backendPort}`);
