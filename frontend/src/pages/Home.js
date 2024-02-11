@@ -1,8 +1,9 @@
-// Home.js
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import TaskForm from "../components/TaskForm";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import TaskAPI from "../api/TaskAPI";
+import axios from "axios"; // Import Axios
 
 const Home = () => {
   const [tasks, setTasks] = useState([]);
@@ -11,16 +12,14 @@ const Home = () => {
 
   const fetchTasks = async () => {
     try {
-      const jwt = localStorage.getItem("token"); // Move jwt declaration here
-      const options = {
+      const jwt = localStorage.getItem("token");
+      const response = await TaskAPI.get("/tasks/get", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${jwt}`,
         },
-      };
-      const response = await fetch("http://localhost:3001/tasks/get", options);
-      const data = await response.json();
-      setTasks(data);
+      });
+      setTasks(response.data);
     } catch (error) {
       console.error("Error fetching tasks:", error);
     }
@@ -30,7 +29,6 @@ const Home = () => {
     fetchTasks();
   }, []);
 
-  // Move jwt declaration above its usage
   const jwt = localStorage.getItem("token");
   const [, payloadBase64] = jwt.split(".");
   const payload = JSON.parse(atob(payloadBase64));
@@ -38,30 +36,23 @@ const Home = () => {
 
   const handleAddTask = async (newTaskTitle) => {
     try {
-      const options = {
-        method: "POST",
+      const response = await TaskAPI.post("/tasks/create", { newTaskTitle }, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${jwt}`,
-        },
-        body: JSON.stringify({ newTaskTitle }),
-      };
-
-      const response = await fetch(
-        "http://localhost:3001/tasks/create",
-        options
-      );
-
-      if (response.ok) {
-        const responseData = await response.json();
+        }
+      });
+  
+      if (response.status === 200) {
+        const responseData = response.data;
         const taskId = responseData.taskId;
-
+  
         const newTask = {
           id: taskId,
           title: newTaskTitle,
           completed: false,
         };
-
+  
         setTasks((prevTasks) => [...prevTasks, newTask]);
       } else {
         console.error("Failed to add task");
@@ -73,68 +64,48 @@ const Home = () => {
 
   const handleEditTask = async (taskId, editedTaskTitle) => {
     try {
-      const options = {
-        method: "PUT",
+      const response = await TaskAPI.put(`/tasks/update/${taskId}`, { editedTaskTitle }, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${jwt}`,
-        },
-        body: JSON.stringify({ editedTaskTitle }),
-      };
-
-      const response = await fetch(
-        `http://localhost:3001/tasks/update/${taskId}`,
-        options
-      );
-      const data = await response.json();
-
-      if (response.ok) {
+        }
+      });
+  
+      if (response.status === 200) {
         setTasks((prevTasks) =>
-          prevTasks.map((task) => (task.title === data.title ? data : task))
+          prevTasks.map((task) => (task.title === editedTaskTitle ? { ...task, title: editedTaskTitle } : task))
         );
-        setEditingTaskId(null); // Clear the editing task ID after successful edit
+        setEditingTaskId(null);
       } else {
-        console.error("Failed to edit task:", data);
+        console.error("Failed to edit task");
       }
     } catch (error) {
       console.error("Error editing task:", error);
     }
-
-    await fetchTasks();
   };
 
   const handleMarkingTask = async (taskId, taskCompleted) => {
-    var oppositeMarking = !taskCompleted;
+    const oppositeMarking = !taskCompleted;
 
     try {
-      const options = {
-        method: "PUT",
+      const response = await TaskAPI.put(`/tasks/marking/${taskId}`, { completed: oppositeMarking }, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${jwt}`,
-        },
-        body: JSON.stringify({ completed: oppositeMarking }),
-      };
-
-      const response = await fetch(
-        `http://localhost:3001/tasks/marking/${taskId}`,
-        options
-      );
-      const data = await response.json();
-
-      if (response.ok) {
+        }
+      });
+  
+      if (response.status === 200) {
         setTasks((prevTasks) =>
-          prevTasks.map((task) => (task.title === data.title ? data : task))
+          prevTasks.map((task) => (task.id === taskId ? { ...task, completed: oppositeMarking } : task))
         );
-        setEditingTaskId(null); // Clear the editing task ID after successful edit
+        setEditingTaskId(null);
       } else {
-        console.error("Failed to edit task:", data);
+        console.error("Failed to edit task");
       }
     } catch (error) {
-      console.error("Error editing task:", error);
+      console.error("Error marking task:", error);
     }
-
-    await fetchTasks();
   };
 
   const handleStartEditing = (taskId, taskTitle) => {
@@ -144,24 +115,17 @@ const Home = () => {
 
   const handleDeleteTask = async (taskId) => {
     try {
-      const options = {
-        method: "DELETE",
+      const response = await TaskAPI.delete(`/tasks/delete/${taskId}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${jwt}`,
-        },
-      };
-
-      const response = await fetch(
-        `http://localhost:3001/tasks/delete/${taskId}`,
-        options
-      );
-
-      if (response.ok) {
-        setTasks(tasks.filter((task) => task.id !== taskId));
+        }
+      });
+  
+      if (response.status === 200) {
+        setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
       } else {
-        const data = await response.json();
-        console.error("Failed to delete task:", data);
+        console.error("Failed to delete task");
       }
     } catch (error) {
       console.error("Error deleting task:", error);
