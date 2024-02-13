@@ -5,6 +5,7 @@ module.exports = {
   up: async (queryInterface) => {
     try {
 
+      await queryInterface.bulkDelete("tasks", null, {});
       await queryInterface.bulkDelete("users", null, {});
 
       const password = "12345";
