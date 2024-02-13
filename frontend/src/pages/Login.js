@@ -22,6 +22,9 @@ const Login = () => {
 
         // Use navigate only if the component is rendered
         navigate("/home");
+        window.location.reload()
+
+
         console.log("Login successful");
       } else {
         console.error(
@@ -45,6 +48,7 @@ const Login = () => {
   // If token exists, navigate to home page
   if (jwt) {
     navigate("/home");
+    window.location.reload()
   }
 
   // If token doesn't exist, render login form
