@@ -4,6 +4,9 @@ const bcrypt = require("bcrypt");
 module.exports = {
   up: async (queryInterface) => {
     try {
+
+      await queryInterface.bulkDelete("users", null, {});
+
       const password = "12345";
       const hashedPassword = await bcrypt.hash(password, 10);
       await queryInterface.bulkInsert("users", [
