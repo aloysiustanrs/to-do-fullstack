@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import TaskAPI from "../api/TaskAPI";
+import { useLocation } from "react-router-dom";
 
 const TaskContext = createContext();
 
@@ -7,10 +8,19 @@ export const useTaskContext = () => useContext(TaskContext);
 
 export const TaskProvider = ({ children }) => {
   const [tasks, setTasks] = useState([]);
+  const [isHomePage, setIsHomePage] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
-    fetchTasks();
-  }, []);
+    // Check if current location pathname is the home page
+    setIsHomePage(location.pathname === "/home");
+  }, [location]);
+
+  useEffect(() => {
+    if (isHomePage) {
+      fetchTasks();
+    }
+  }, [isHomePage]);
 
   const fetchTasks = async () => {
     try {
@@ -44,7 +54,7 @@ export const TaskProvider = ({ children }) => {
       if (response.status >= 200 && response.status < 300) {
         const responseData = response.data;
         const taskId = responseData.taskId;
-      
+
         const newTask = {
           id: taskId,
           title: newTaskTitle,
@@ -52,7 +62,6 @@ export const TaskProvider = ({ children }) => {
         };
 
         setTasks((prevTasks) => [...prevTasks, newTask]);
-
       } else {
         console.error("Failed to add task");
       }
@@ -139,11 +148,9 @@ export const TaskProvider = ({ children }) => {
     }
   };
 
-  
-
   return (
     <TaskContext.Provider
-      value={{ tasks, addTask, editTask, markTask, deleteTask }}
+      value={{ tasks, addTask, editTask, markTask, deleteTask, setIsHomePage }}
     >
       {children}
     </TaskContext.Provider>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import TaskAPI from "../api/TaskAPI"; 
+import TaskAPI from "../api/TaskAPI";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -10,20 +10,21 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await TaskAPI.post("/auth/login", { // Use TaskAPI.post instead of axios.post
+      const response = await TaskAPI.post("/auth/login", {
+        // Use TaskAPI.post instead of axios.post
         username,
         password,
       });
 
-      if (response.status === 200) { // Check status code directly
+      if (response.status === 200) {
+        // Check status code directly
         const data = response.data;
 
         localStorage.setItem("token", data.token);
 
         // Use navigate only if the component is rendered
         navigate("/home");
-        window.location.reload()
-
+        window.location.reload();
 
         console.log("Login successful");
       } else {
@@ -48,7 +49,7 @@ const Login = () => {
   // If token exists, navigate to home page
   if (jwt) {
     navigate("/home");
-    window.location.reload()
+    window.location.reload();
   }
 
   // If token doesn't exist, render login form
