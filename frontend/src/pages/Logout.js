@@ -1,22 +1,19 @@
 // Logout.js
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useTaskContext } from "../context/TaskContext";
 
 const Logout = () => {
+  const { setTasks } = useTaskContext();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const handleLogout = () => {
-      // Perform logout actions (e.g., clear local storage)
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      // Redirect to the login page
-      navigate('/');
-    };
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setTasks([]);
 
-    // Call the handleLogout function when the component mounts
-    handleLogout();
-  }, [navigate]);
+    navigate("/");
+  }, [setTasks, navigate]);
 
   // You can also return some UI elements here if needed
   return (

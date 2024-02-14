@@ -150,7 +150,15 @@ export const TaskProvider = ({ children }) => {
 
   return (
     <TaskContext.Provider
-      value={{ tasks, addTask, editTask, markTask, deleteTask, setIsHomePage }}
+      value={{
+        tasks,
+        setTasks,
+        addTask,
+        editTask,
+        markTask,
+        deleteTask,
+        setIsHomePage,
+      }}
     >
       {children}
     </TaskContext.Provider>

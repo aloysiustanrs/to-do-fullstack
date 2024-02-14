@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import TaskAPI from "../api/TaskAPI";
 
@@ -7,6 +7,16 @@ const Login = () => {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    // Retrieve token from localStorage
+    const jwt = localStorage.getItem("token");
+
+    // If token exists, navigate to home page
+    if (jwt) {
+      navigate("/home");
+    }
+  }, [navigate]); // Empty dependency array ensures this effect runs only once after initial render
 
   const handleLogin = async () => {
     try {
@@ -24,7 +34,6 @@ const Login = () => {
 
         // Use navigate only if the component is rendered
         navigate("/home");
-        window.location.reload();
 
         console.log("Login successful");
       } else {
@@ -42,15 +51,6 @@ const Login = () => {
       console.error("Login failed:", error);
     }
   };
-
-  // Retrieve token from localStorage
-  const jwt = localStorage.getItem("token");
-
-  // If token exists, navigate to home page
-  if (jwt) {
-    navigate("/home");
-    window.location.reload();
-  }
 
   // If token doesn't exist, render login form
   return (
