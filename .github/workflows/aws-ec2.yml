@@ -13,35 +13,13 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: pwd
-      run: pwd
-
-    - name: ls
-      run: ls
-
-    - name: cd back one
-      run: cd ..
-
-    - name: pwd
-      run: pwd
-
-    - name: ls
-      run: ls
-
-    - name: cd in frontend
-      run: cd frontend
-
-    - name: pwd
-      run: pwd
-
-    - name: ls
-      run: ls
-
     - name: Install dependencies
       run: npm install
+      working-directory: frontend
 
     - name: Build
       run: npm run build
+      working-directory: frontend
 
     - name: SSH into EC2 instance
       uses: appleboy/ssh-action@master
