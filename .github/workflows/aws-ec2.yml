@@ -13,6 +13,9 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Change directory to frontend
+      run: cd frontend
+
     - name: Install dependencies
       run: npm install
 
@@ -30,5 +33,3 @@ jobs:
           sudo pm2 restart all
           sudo ln -s -f /etc/nginx/sites-available/yomy.online /etc/nginx/sites-enabled/
           sudo systemctl reload nginx
-
-    # Add more steps as needed, like deploying to a server or running tests
