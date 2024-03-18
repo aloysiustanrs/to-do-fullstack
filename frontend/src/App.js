@@ -14,6 +14,7 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/test" element={<Test />} />
         </Routes>
       </TaskProvider>
     </BrowserRouter>
