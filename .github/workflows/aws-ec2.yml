@@ -22,6 +22,18 @@ jobs:
     - name: cd back one
       run: cd ..
 
+    - name: pwd
+      run: pwd
+
+    - name: ls
+      run: ls
+
+    - name: cd in frontend
+      run: cd frontend
+
+    - name: pwd
+      run: pwd
+
     - name: ls
       run: ls
 
