@@ -45,5 +45,6 @@ jobs:
         script: |
           sudo pm2 restart all
           sudo pm2 save
-          sudo ln -s -f /etc/nginx/sites-available/yomy.online /etc/nginx/sites-enabled/
+          sudo rm /etc/nginx/sites-available/yomy.online
+          sudo ln -s /etc/nginx/sites-available/yomy.online /etc/nginx/sites-enabled/
           sudo systemctl reload nginx
