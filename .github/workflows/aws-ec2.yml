@@ -13,6 +13,24 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Echo secret value
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      run: echo "Secret value is $SSH_PRIVATE_KEY"
+    - name: Echo secret value
+      env:
+        EC2_HOST: ${{ secrets.EC2_HOST }}
+      run: echo "Secret value is $EC2_HOST"
+    - name: Echo secret value
+      env:
+        EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+      run: echo "Secret value is $EC2_USERNAME"
+    - name: Echo secret value
+      env:
+        EC2_SSH_PORT: ${{ secrets.EC2_SSH_PORT }}
+      run: echo "Secret value is $EC2_SSH_PORT"
+
+
     - name: Install dependencies
       run: npm install
       working-directory: frontend
