@@ -4,7 +4,7 @@ const verifyToken = require("../middleware/verifyToken");
 const taskController = require("../controllers/taskController");
 
 // starting from /tasks endpoint
-
+router.get("/test", verifyToken, taskController.test);
 router.get("/get", verifyToken, taskController.getUserTasks);
 router.post("/create", verifyToken, taskController.createTask);
 router.put("/update/:taskId", verifyToken, taskController.updateTask);

@@ -8,6 +8,7 @@ export const useTaskContext = () => useContext(TaskContext);
 
 export const TaskProvider = ({ children }) => {
   const [tasks, setTasks] = useState([]);
+  const [testString, setTestString] = useState("");
   const [isHomePage, setIsHomePage] = useState(false);
   const location = useLocation();
 
@@ -22,6 +23,10 @@ export const TaskProvider = ({ children }) => {
     }
   }, [isHomePage]);
 
+  useEffect(() => {
+    test();
+  }, []);
+
   const fetchTasks = async () => {
     try {
       const jwt = localStorage.getItem("token");
@@ -34,6 +39,26 @@ export const TaskProvider = ({ children }) => {
       setTasks(response.data);
     } catch (error) {
       console.error("Error fetching tasks:", error);
+    }
+  };
+
+  const test = async () => {
+    try {
+      const jwt = localStorage.getItem("token");
+      const response = await TaskAPI.get("/tasks/test", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+
+      console.log(response);
+      // Assuming response.data is a string, you can return it directly
+      setTestString(response.data.message);
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+      // If you want to return a specific error message as a string, you can do it here
+      return "Error fetching tasks: " + error.message;
     }
   };
 
@@ -158,6 +183,7 @@ export const TaskProvider = ({ children }) => {
         markTask,
         deleteTask,
         setIsHomePage,
+        testString,
       }}
     >
       {children}

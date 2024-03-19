@@ -1,5 +1,12 @@
 const { Task } = require("../models/Task");
 
+async function test(req, res) {
+  const data = {
+    message: "test!!!!",
+  };
+  res.json(data);
+}
+
 async function getUserTasks(req, res) {
   const userId = req.userId;
 
@@ -72,6 +79,7 @@ async function deleteTask(req, res) {
 }
 
 module.exports = {
+  test,
   getUserTasks,
   createTask,
   updateTask,
