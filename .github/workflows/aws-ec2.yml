@@ -10,28 +10,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      
-    - name: Install dependencies
-      run: npm install
-      working-directory: frontend
-
-    - name: Build
-      run: npm run build
-      working-directory: frontend
-
-    # --------------------
-    # Deploy to EC2
-    # --------------------
     - uses: webfactory/ssh-agent@v0.7.0
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-    - name: Deploy app to EC2
-      run: |
-        rsync -avz --exclude "configuration" -e "ssh -o StrictHostKeyChecking=no" -p ./ ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:/home/ubuntu/test
-
-    - name: Restart PM2 and Nginx
+    - name: Pull latest , npm install , npm run build , restart PM2 and Nginx
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.EC2_HOST }}
@@ -39,6 +21,12 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.EC2_SSH_PORT }}
         script: |
+          cd /home/ubuntu/to-do-fullstack
+          git pull
+          cd /home/ubuntu/to-do-fullstack/frontend
+          npm install
+          npm run build
           sudo pm2 restart all
+          sudo pm2 save
           sudo ln -s -f /etc/nginx/sites-available/yomy.online /etc/nginx/sites-enabled/
           sudo systemctl reload nginx
