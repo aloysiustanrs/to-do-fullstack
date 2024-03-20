@@ -43,8 +43,8 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.EC2_SSH_PORT }}
         script: |
-          sudo pm2 restart all
-          sudo pm2 save
-          sudo rm /etc/nginx/sites-available/yomy.online
+          sudo pm2 restart 0 --update-env
+          sudo pm2 save --force
+          sudo rm /etc/nginx/sites-enabled/yomy.online
           sudo ln -s /etc/nginx/sites-available/yomy.online /etc/nginx/sites-enabled/
           sudo systemctl reload nginx
