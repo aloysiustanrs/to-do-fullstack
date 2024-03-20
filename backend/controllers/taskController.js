@@ -2,7 +2,7 @@ const { Task } = require("../models/Task");
 
 async function test(req, res) {
   const data = {
-    message: "test!!!!",
+    message: "Test 1130 03 20 2024",
   };
   res.json(data);
 }
